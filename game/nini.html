@@ -1,0 +1,54 @@
+function createObstacle() {
+    const obstacle = document.createElement('div');
+    obstacle.classList.add('obstacle');
+
+    // 障害物の高さと幅をランダムに設定
+    const height = Math.floor(Math.random() * 41) + 20; // 20px〜60px
+    const width = Math.floor(Math.random() * 41) + 20; // 20px〜60px
+    obstacle.style.height = height + 'px';
+    obstacle.style.width = width + 'px';
+
+    // 障害物の出現位置をランダムに設定（600px〜800px）
+    const startPosition = Math.floor(Math.random() * 201) + 600; // 600px〜800px
+    obstacle.style.left = startPosition + 'px'; // 初期位置
+
+    // 障害物の速度をランダムに設定（移動速度は3〜8px/20ms）
+    const speed = Math.floor(Math.random() * 6) + 3; // 3px〜8px
+    gameContainer.appendChild(obstacle);
+
+    let obstacleInterval = setInterval(() => {
+        const obstaclePosition = parseInt(obstacle.style.left);
+        if (obstaclePosition < -20) {
+            clearInterval(obstacleInterval);
+            gameContainer.removeChild(obstacle);
+            score++;
+            scoreElement.textContent = 'スコア: ' + score;
+        } else {
+            obstacle.style.left = obstaclePosition - speed + 'px';
+        }
+
+        // 衝突判定
+        const dinoRect = dino.getBoundingClientRect();
+        const obstacleRect = obstacle.getBoundingClientRect();
+
+        if (
+            dinoRect.right > obstacleRect.left &&
+            dinoRect.left < obstacleRect.right &&
+            dinoRect.bottom > obstacleRect.top &&
+            dinoRect.top < obstacleRect.bottom
+        ) {
+            if (!isInvincible) {
+                if (lives > 1) {
+                    lives--; // 残機を減らす
+                    livesElement.textContent = '残機: ' + lives;
+                } else {
+                    alert('ゲームオーバー！ スコア: ' + score);
+                    clearInterval(timer); // 経過時間のカウントを停止
+                    resetGame(); // ゲームをリセット
+                }
+                gameContainer.removeChild(obstacle); // 障害物を削除
+                clearInterval(obstacleInterval); // 障害物の移動を停止
+            }
+        }
+    }, 20);
+}
