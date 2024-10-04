@@ -55,8 +55,8 @@
         }
         .timer {
             position: absolute;
-            top: 10px;
-            center: 10px;
+            top: 40px; /* スコアと重ならないように位置を変更 */
+            left: 10px;
             font-size: 20px;
             color: #000;
         }
@@ -84,7 +84,7 @@
         <div class="dino" id="dino"></div>
         <div class="score" id="score">スコア: 0</div>
         <div class="lives" id="lives">残機: 3</div>
-        <div class="timer" id="timer">残り時間: 5</div>
+        <div class="timer" id="timer">残り時間: 20</div>
     </div>
     <script>
         const dino = document.getElementById('dino');
@@ -97,12 +97,12 @@
         let score = 0;
         let lives = 3; // 残機
         let canActivateInvincibility = true; // クールタイム管理
-        let remainingTime = 5; // 残り時間
+        let remainingTime = 20; // 残り時間
 
         function startGame() {
             score = 0;
             lives = 3; // ゲーム開始時にリセット
-            remainingTime = 5; // 残り時間を5秒にリセット
+            remainingTime = 20; // 残り時間を20秒にリセット
             isInvincible = false;
             canActivateInvincibility = true; // ゲーム開始時にリセット
             scoreElement.textContent = 'スコア: ' + score;
