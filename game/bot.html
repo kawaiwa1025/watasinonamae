@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f7f7f7;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        .game-container {
+            position: relative;
+            width: 600px;
+            height: 200px;
+            border: 2px solid #333;
+            background-color: #fff;
+            overflow: hidden;
+            display: none; /* ゲーム開始前は非表示 */
+        }
+        .dino {
+            position: absolute;
+            bottom: 0;
+            left: 50px;
+            width: 30px;
+            height: 30px;
+            background-color: #4CAF50;
+        }
+        .obstacle {
+            position: absolute;
+            bottom: 0;
+            width: 20px;
+            height: 30px;
+            background-color: #FF5733;
+        }
+        .score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            color: #000;
+        }
+        .invincible {
+            background-color: #FFD700; /* 無敵状態の色 */
+        }
+        .start-button {
+            padding: 10px 20px;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .start-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <button class="start-button" id="startButton">スタート</button>
+    <div class="game-container" id="gameContainer">
+        <div class="dino" id="dino"></div>
+        <div class="score" id="score">スコア: 0</div>
+    </div>
+    <script>
+        const dino = document.getElementById('dino');
+        const scoreElement = document.getElementById('score');
+        const gameContainer = document.getElementById('gameContainer');
+        const startButton = document.getElementById('startButton');
+        let isInvincible = false;
+        let score = 0;
+
+        function startGame() {
+            score = 0;
+            isInvincible = false;
+            scoreElement.textContent = 'スコア: ' + score;
+            gameContainer.style.display = 'block'; // ゲームコンテナを表示
+            startButton.style.display = 'none'; // スタートボタンを非表示
+
+            setInterval(createObstacle, 2000);
+        }
+
+        function activateInvincibility() {
+            isInvincible = true;
+            dino.classList.add('invincible');
+
+            setTimeout(() => {
+                isInvincible = false;
+                dino.classList.remove('invincible');
+            }, 2000); // 2秒間無敵
+        }
+
+        function createObstacle() {
+            const obstacle = document.createElement('div');
+            obstacle.classList.add('obstacle');
+            obstacle.style.left = '600px';
+            gameContainer.appendChild(obstacle);
+
+            let obstacleInterval = setInterval(() => {
+                const obstaclePosition = parseInt(obstacle.style.left);
+                if (obstaclePosition < -20) {
+                    clearInterval(obstacleInterval);
+                    gameContainer.removeChild(obstacle);
+                    score++;
+                    scoreElement.textContent = 'スコア: ' + score;
+                } else {
+                    obstacle.style.left = obstaclePosition - 5 + 'px';
+                }
+
+                // 衝突判定
+                if (obstaclePosition < 80 && obstaclePosition > 50 && !isInvincible) {
+                    alert('ゲームオーバー！ スコア: ' + score);
+                    document.location.reload();
+                }
+            }, 20);
+        }
+
+        window.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                activateInvincibility();
+            }
+        });
+
+        startButton.addEventListener('click', startGame);
+    </script>
+</body>
+</html>
