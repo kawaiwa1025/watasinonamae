@@ -35,8 +35,6 @@
         .obstacle {
             position: absolute;
             bottom: 0;
-            width: 20px;
-            height: 30px;
             background-color: #FF5733;
         }
         .score {
@@ -146,7 +144,16 @@
         function createObstacle() {
             const obstacle = document.createElement('div');
             obstacle.classList.add('obstacle');
-            obstacle.style.left = '600px';
+
+            // 障害物の高さをランダムに設定（高さ20〜60px、幅20〜40px）
+            const height = Math.floor(Math.random() * 41) + 20; // 20px〜60px
+            const width = Math.floor(Math.random() * 41) + 20; // 20px〜60px
+            obstacle.style.height = height + 'px';
+            obstacle.style.width = width + 'px';
+
+            // 障害物の速度をランダムに設定（移動速度は3〜8px/20ms）
+            const speed = Math.floor(Math.random() * 6) + 3; // 3px〜8px
+            obstacle.style.left = '600px'; // 初期位置
             gameContainer.appendChild(obstacle);
 
             let obstacleInterval = setInterval(() => {
@@ -157,7 +164,7 @@
                     score++;
                     scoreElement.textContent = 'スコア: ' + score;
                 } else {
-                    obstacle.style.left = obstaclePosition - 5 + 'px';
+                    obstacle.style.left = obstaclePosition - speed + 'px';
                 }
 
                 // 衝突判定
