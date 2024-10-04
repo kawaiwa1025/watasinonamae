@@ -96,6 +96,7 @@
         let lives = 2; // 残機
         let canActivateInvincibility = true; // クールタイム管理
         let elapsedTime = 0; // 経過時間
+        let timer; // 経過時間のタイマーを格納する変数
 
         function startGame() {
             score = 0;
@@ -110,7 +111,7 @@
             startButton.style.display = 'none'; // スタートボタンを非表示
 
             // 経過時間のカウントアップ
-            const timer = setInterval(() => {
+            timer = setInterval(() => {
                 elapsedTime++;
                 elapsedTimeElement.textContent = '経過時間: ' + elapsedTime + 's';
 
@@ -118,11 +119,16 @@
                 if (lives <= 0) {
                     clearInterval(timer);
                     alert('ゲームオーバー！ スコア: ' + score);
-                    document.location.reload();
+                    resetGame(); // ゲームをリセット
                 }
             }, 1000);
 
             setInterval(createObstacle, 2000);
+        }
+
+        function resetGame() {
+            gameContainer.style.display = 'none'; // ゲームコンテナを非表示
+            startButton.style.display = 'block'; // スタートボタンを表示
         }
 
         function activateInvincibility() {
@@ -185,7 +191,7 @@
                         } else {
                             alert('ゲームオーバー！ スコア: ' + score);
                             clearInterval(timer); // 経過時間のカウントを停止
-                            document.location.reload();
+                            resetGame(); // ゲームをリセット
                         }
                         gameContainer.removeChild(obstacle); // 障害物を削除
                         clearInterval(obstacleInterval); // 障害物の移動を停止
